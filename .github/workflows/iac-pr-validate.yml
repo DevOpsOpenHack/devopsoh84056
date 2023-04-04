@@ -13,9 +13,9 @@ jobs:
 
     - name: Terraform fmt
       id: fmt
-      run: exit 1
+      run: exit 2
 #      run: terraform fmt -check iac/terraform || exit 1
-  my-first-job:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Hello Team !"
+#  my-first-job:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - run: echo "Hello Team !"
