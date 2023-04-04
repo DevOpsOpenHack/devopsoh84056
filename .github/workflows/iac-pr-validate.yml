@@ -5,10 +5,6 @@ on:
     paths:
       - iac/**
 jobs:
-  my-first-job:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Hello Team !"
   my-second-job:
     runs-on: ubuntu-latest
     steps:
@@ -19,3 +15,7 @@ jobs:
       id: fmt
       run: terraform fmt -check iac/terraform
       continue-on-error: false
+  my-first-job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello Team !"
