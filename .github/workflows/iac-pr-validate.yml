@@ -14,9 +14,9 @@ jobs:
     - name: Terraform fmt
       id: fmt
       run: |
-        echo Terraform output: $(terraform fmt -check iac/terraform)
+        terraform fmt -check iac/terraform
         if [ $? -ne 0 ]; then
-            _error "Terraform files are not properly formatted!"
+            echo "Terraform files are not properly formatted!"
             exit 1
         fi
 #  my-first-job:
