@@ -13,12 +13,7 @@ jobs:
 
     - name: Terraform fmt
       id: fmt
-      run: |
-        terraform fmt -check iac/terraform
-        if [ $? -ne 0 ]; then
-            echo "Terraform files are not properly formatted!"
-            exit 1
-        fi
+      run: iac/terraform/terraform_check.sh
 #  my-first-job:
 #    runs-on: ubuntu-latest
 #    steps:
