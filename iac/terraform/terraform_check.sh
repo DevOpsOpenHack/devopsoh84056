@@ -1,5 +1,6 @@
 #!/bin/bash
 
+which terraform
 terraform fmt -check iac/terraform
 status=$?
 echo Terraform status: $status
