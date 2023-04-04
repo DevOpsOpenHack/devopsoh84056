@@ -13,7 +13,7 @@ jobs:
 
     - name: Terraform fmt
       id: fmt
-      run: chmod +x iac/terraform/terraform_check.sh || iac/terraform/terraform_check.sh
+      run: iac/terraform/terraform_check.sh
 #  my-first-job:
 #    runs-on: ubuntu-latest
 #    steps:
