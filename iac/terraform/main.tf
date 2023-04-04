@@ -2,14 +2,11 @@
 ## RESOURCE GROUP                         ##
 ############################################
 
-resource
- "azurerm_resource_group" "resource_group" {
-  name
-       = local.resource_group_name
+resource "azurerm_resource_group" "resource_group" {
+  name     = local.resource_group_name
   location = local.location
 
-  lifecycle
-   {
+  lifecycle {
     ignore_changes = [
       tags
     ]
@@ -20,8 +17,7 @@ resource
 ## CONTAINER REGISTRY                     ##
 ############################################
 
-resource "azurerm_contai
-ner_registry" "container_registry" {
+resource "azurerm_container_registry" "container_registry" {
   name                = local.container_registry_name
   location            = azurerm_resource_group.resource_group.location
   resource_group_name = azurerm_resource_group.resource_group.name

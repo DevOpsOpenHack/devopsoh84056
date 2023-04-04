@@ -17,5 +17,5 @@ jobs:
 
     - name: Terraform fmt
       id: fmt
-      run: terraform fmt -check
+      run: terraform fmt -check iac/terraform
       continue-on-error: false
