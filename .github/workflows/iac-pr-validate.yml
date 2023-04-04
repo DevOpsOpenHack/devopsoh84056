@@ -1,4 +1,4 @@
-name: learn-github-actions
+name: IaC Pull Request validate
 run-name: ${{ github.actor }} is learning GitHub Actions
 on:
   pull_request:
