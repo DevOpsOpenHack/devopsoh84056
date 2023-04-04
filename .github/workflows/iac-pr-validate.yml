@@ -1,0 +1,11 @@
+name: learn-github-actions
+run-name: ${{ github.actor }} is learning GitHub Actions
+on:
+  pull_request:
+    paths:
+      - iac/**
+jobs:
+  my-first-job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello Team !"
