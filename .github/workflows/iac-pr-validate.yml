@@ -9,3 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Hello Team !"
+  my-second-job:
+    steps:
+    - uses: actions/checkout@v3
+    - uses: hashicorp/setup-terraform@v2
+
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -check
+      continue-on-error: false
