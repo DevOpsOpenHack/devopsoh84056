@@ -1,12 +1,12 @@
 name: IaC Deployment
 run-name: ${{ github.actor }} is learning GitHub Actions
-on: push
-#  push:
-#    branches:
-#      - main
-#    paths:
-#      - iac/**
-#on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - iac/**
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
