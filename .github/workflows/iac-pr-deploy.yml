@@ -31,7 +31,8 @@ jobs:
 
     # Usage for current job: ${{ steps.resources_prefix.outputs.result }}
 
-  deployment:
+  deployment_plan:
+    needs: init_resources_prefix
     defaults:
       run:
         working-directory: iac/terraform  
@@ -67,5 +68,5 @@ jobs:
         -backend-config=resource_group_name="${{ secrets.TFSTATE_RESOURCES_GROUP_NAME}}"
 
     - name: Terraform plan
-      run: terraform plan --detailed-exitcode -var="location=${LOCATION}" -var="resources_prefix=${RESOURCES_PREFIX}"
+      run: terraform plan --detailed-exitcode -var="location=${LOCATION}" -var="resources_prefix=${{ needs.init_resources_prefix.outputs.RESOURCES_PREFIX }}"
 
