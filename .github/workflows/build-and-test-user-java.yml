@@ -42,5 +42,4 @@ jobs:
 
       - name: Add comment to PR
         if: failure() && ${{ github.event_name }} == 'pull_request'
-        run: echo "fail, lets add a comment to PR"
-
+        run: echo "fail, lets add a comment to PR "
