@@ -41,5 +41,5 @@ jobs:
           reporter: java-junit        # Format of test results
 
       - name: Add comment to PR
-        if: failure() && ${{ github.event_name }} == 'pull_request'
+        if: ${{ failure() && github.event_name == 'pull_request'}}
         run: echo "fail, lets add a comment to PR "
