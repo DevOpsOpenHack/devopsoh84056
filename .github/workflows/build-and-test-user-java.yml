@@ -2,7 +2,7 @@ name: Build and test user-java
 run-name: ${{ github.actor }} is building and testing usr-java
 on:
   workflow_dispatch:
-  #pull_request:
+  pull_request:
   push:
     branches:
       - 15-challenge-4-build-test
@@ -42,4 +42,4 @@ jobs:
 
       - name: Add comment to PR
         if: ${{ failure() && github.event_name == 'pull_request'}}
-        run: echo "fail, lets add a comment to PR "
+        run: echo "fail, lets add a comment to PR 2"
