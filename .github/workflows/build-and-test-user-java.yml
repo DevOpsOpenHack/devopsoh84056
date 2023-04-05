@@ -11,7 +11,19 @@ on:
 
 env:
   JAVA_WORKING_DIRECTORY: apis/user-java
-  TEST_FAILURE_MESSAGE: message
+  TEST_FAILURE_MESSAGE: |
+    ### Unit Test `failure`
+    <details>
+    <summary>Workflow details</summary>
+
+    Workflow name: `${{ github.workflow }}`
+    Action: `${{ github.event_name }}`
+    Job: `${{ github.job }}`
+    PR: #${{ github.event.number }}
+    </details>
+
+    Test details: [Run #${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+    Pusher: @${{ github.actor }}
 
 jobs:
   build_tests:
@@ -51,5 +63,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '👋 Thanks for reporting! ${{ github.workflow }}'
+              body: '${{ env.TEST_FAILURE_MESSAGE }}'
             })
