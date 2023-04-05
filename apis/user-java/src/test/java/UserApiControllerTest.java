@@ -3,6 +3,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.api.UserApiController;
 import io.swagger.model.Profile;
 import io.swagger.repository.UserRepositoryService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -93,6 +94,7 @@ public class UserApiControllerTest {
                         .content(convertObjectToJsonBytes(profile))
         )
                 .andExpect(MockMvcResultMatchers.status().is5xxServerError());
+        Assert.fail();
     }
 
     @Test
