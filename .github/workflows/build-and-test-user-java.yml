@@ -39,3 +39,24 @@ jobs:
           working-directory: ${{env.JAVA_WORKING_DIRECTORY}}/target/surefire-reports/
           path: "*.xml"    # Path to test results
           reporter: java-junit        # Format of test results
+
+      - name: Add comment to PR
+        if: failure()
+        run: echo "fail, lets add a comment to PR"
+
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - run: npm install
+      - run: npm run lint
+      - run: npm test
+      - run: deploy
+        if: ${{ github.event_name == 'push' }}
