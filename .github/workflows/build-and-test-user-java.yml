@@ -62,8 +62,8 @@ jobs:
             github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: testTitleError,
-              body: testBody
+              title: `testTitleError`,
+              body: `testBody`
             });
 
       - name: Add comment to PR
