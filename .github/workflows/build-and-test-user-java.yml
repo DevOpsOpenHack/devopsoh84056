@@ -33,7 +33,7 @@ jobs:
 
       - name: Test Report
         uses: dorny/test-reporter@v1
-        if: success() || failure()    # run this step even if previous step failed
+        if: success() || failure()    # run this step if one of the step failed
         with:
           name: junit tests            # Name of the check run which will be created
           working-directory: ${{env.JAVA_WORKING_DIRECTORY}}/target/surefire-reports/
@@ -41,6 +41,6 @@ jobs:
           reporter: java-junit        # Format of test results
 
       - name: Add comment to PR
-        if: failure()
+        if: failure() && ${{ github.event_name }} == 'pull_request'
         run: echo "fail, lets add a comment to PR"
 
