@@ -5,17 +5,23 @@ on:
     paths:
       - iac/**
 jobs:
-  my-second-job:
+  pr-check:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+
     - uses: hashicorp/setup-terraform@v2
       with:
         terraform_wrapper: false
+
     - name: Terraform fmt
       id: fmt
-      run: iac/terraform/terraform_check.sh
-#  my-first-job:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - run: echo "Hello Team !"
+      run: terraform fmt -check iac/terraform
+
+    - name: Terraform init local
+      id: init_local
+      run: terraform init -backend=false
+
+    - name: Terraform validation
+      id: validation
+      run: terraform validate
