@@ -41,12 +41,12 @@ jobs:
           reporter: java-junit        # Format of test results
 
       - name: Add comment to PR
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         if: ${{ failure() && github.event_name == 'pull_request'}}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.rest.pull_request.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
