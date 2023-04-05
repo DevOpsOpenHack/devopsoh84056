@@ -1,0 +1,43 @@
+name: IaC Deployment
+run-name: ${{ github.actor }} is learning GitHub Actions
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - iac/**
+jobs:
+  init_resources_prefix:
+    name: job1
+    runs-on: ubuntu-latest
+    outputs:
+      # Set output for next job
+      RESOURCES_PREFIX: ${{ steps.resources_prefix.outputs.result }}
+    steps:
+      # Get RESOURCES_PREFIX based on the repo name
+      - name: Get repo name
+        uses: actions/github-script@v5
+        id: resources_prefix
+        with:
+          result-encoding: string
+          script: return context.repo.repo.toLowerCase()
+
+    # Usage for current job: ${{ steps.resources_prefix.outputs.result }}
+
+  deployment:
+    defaults:
+      run:
+        working-directory: iac/terraform  
+    runs-on: ubuntu-latest
+    env:
+      LOCATION: ${{ secrets.LOCATION }}
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_wrapper: false
+
+    - name: Terraform plan
+      run: terraform plan --detailed-exitcode -var="location=${LOCATION}" -var="resources_prefix=${RESOURCES_PREFIX}"
+
