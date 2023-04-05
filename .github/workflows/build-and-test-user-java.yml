@@ -25,7 +25,7 @@ jobs:
           java-version: '8'
           distribution: 'temurin'
 
-      - name: Build with Maven
+      - name: run tests with Maven
         run: mvn test
 
       - name: Test Report
@@ -33,5 +33,6 @@ jobs:
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: junit tests            # Name of the check run which will be created
-          path: "**/surefire-reports/*.xml"    # Path to test results
+          working-directory: apis/user-java/target/surefire-reports/
+          path: "*.xml"    # Path to test results
           reporter: java-junit        # Format of test results
