@@ -9,6 +9,9 @@ on:
     #paths:
       #- apis/user-java/**
 
+env:
+  JAVA_WORKING_DIRECTORY: apis/user-java
+
 jobs:
   build_tests:
     defaults:
@@ -25,7 +28,7 @@ jobs:
           java-version: '8'
           distribution: 'temurin'
 
-      - name: run tests with Maven
+      - name: Run tests with Maven
         run: mvn test
 
       - name: Test Report
@@ -33,6 +36,6 @@ jobs:
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: junit tests            # Name of the check run which will be created
-          working-directory: apis/user-java/target/surefire-reports/
+          working-directory: ${JAVA_WORKING_DIRECTORY}/target/surefire-reports/
           path: "*.xml"    # Path to test results
           reporter: java-junit        # Format of test results
