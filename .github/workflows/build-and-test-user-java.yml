@@ -12,13 +12,13 @@ on:
 env:
   JAVA_WORKING_DIRECTORY: apis/user-java
   TEST_FAILURE_MESSAGE: |
-    ### Unit Test `failure`
+    ### Unit Test failure
     <details>
     <summary>Workflow details</summary>
 
     Workflow name: ${{ github.workflow }}
     Action: ${{ github.event_name }}
-    Job: ${{ github.job }}`
+    Job: ${{ github.job }}
     PR: #${{ github.event.number }}
     </details>
 
