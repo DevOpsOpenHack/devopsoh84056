@@ -2,8 +2,8 @@ name: IaC Deployment
 run-name: ${{ github.actor }} is learning GitHub Actions
 on:
   push:
-    branches:
-      - main
+#    branches:
+#      - main
     paths:
       - iac/**
 jobs:
@@ -37,6 +37,27 @@ jobs:
     - uses: hashicorp/setup-terraform@v2
       with:
         terraform_wrapper: false
+
+    - name: 'Az CLI login'
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.ARM_CLIENT_ID }}
+        tenant-id: ${{ secrets.ARM_TENANT_ID }}
+        subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+    - name: 'Run az commands'
+      run: |
+        az account show
+        az group list
+        pwd 
+
+    - name: Terraform init remote Azure storage
+      run: |
+        terraform init \
+        -backend-config=storage_account_name="${{ secrets.TFSTATE_STORAGE_ACCOUNT_NAME}}" \
+        -backend-config=container_name="${{ secrets.TFSTATE_STORAGE_CONTAINER_NAME}}" \
+        -backend-config=key="${{ secrets.TFSTATE_KEY}}" \
+        -backend-config=resource_group_name="${{ secrets.TFSTATE_RESOURCES_GROUP_NAME}}"
 
     - name: Terraform plan
       run: terraform plan --detailed-exitcode -var="location=${LOCATION}" -var="resources_prefix=${RESOURCES_PREFIX}"
