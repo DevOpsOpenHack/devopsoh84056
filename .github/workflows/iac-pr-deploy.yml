@@ -40,18 +40,18 @@ jobs:
       with:
         terraform_wrapper: false
 
-    - name: 'Az CLI login'
-      uses: azure/login@v1
-      with:
-        client-id: ${{ secrets.ARM_CLIENT_ID }}
-        tenant-id: ${{ secrets.ARM_TENANT_ID }}
-        subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+    # - name: 'Az CLI login'
+    #   uses: azure/login@v1
+    #   with:
+    #     client-id: ${{ secrets.ARM_CLIENT_ID }}
+    #     tenant-id: ${{ secrets.ARM_TENANT_ID }}
+    #     subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
-    - name: 'Run az commands'
-      run: |
-        az account show
-        az group list
-        pwd 
+    # - name: 'Run az commands'
+    #   run: |
+    #     az account show
+    #     az group list
+    #     pwd 
 
     - name: Terraform init remote Azure storage
       run: |
