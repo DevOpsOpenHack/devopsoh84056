@@ -23,7 +23,7 @@ jobs:
     steps:
       # Get RESOURCES_PREFIX based on the repo name
       - name: Get repo name
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         id: resources_prefix
         with:
           result-encoding: string
