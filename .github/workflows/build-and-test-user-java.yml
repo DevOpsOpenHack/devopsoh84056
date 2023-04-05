@@ -33,5 +33,5 @@ jobs:
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: junit tests            # Name of the check run which will be created
-          path: target/surefire-reports/*.xml    # Path to test results
+          path: /apis/user-java/target/surefire-reports/*.xml    # Path to test results
           reporter: java-junit        # Format of test results
