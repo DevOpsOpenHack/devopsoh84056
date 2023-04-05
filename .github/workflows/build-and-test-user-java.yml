@@ -53,6 +53,19 @@ jobs:
           path: "*.xml"    # Path to test results
           reporter: java-junit        # Format of test results
 
+      - name: Create issue
+        uses: actions/github-script@v6
+        if: ${{ failure() && github.event_name == 'push'}}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: testTitleError,
+              body: testBody
+            });
+
       - name: Add comment to PR
         uses: actions/github-script@v6
         if: ${{ failure() && github.event_name == 'pull_request'}}
