@@ -63,9 +63,6 @@ jobs:
 
   deploy_docker_production:
     needs: health-check
-    defaults:
-      run:
-        working-directory: apis/user-java
     name: deploy_docker_production
     runs-on: ubuntu-latest
     steps:
