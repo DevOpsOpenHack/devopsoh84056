@@ -30,7 +30,12 @@ public class HealthcheckApiController implements HealthcheckApi {
     public ResponseEntity<Healthcheck> healthcheckUserGet() {
 
         try {
-            final HttpStatus status = HttpStatus.SERVICE_UNAVAILABLE;
+            final HttpStatus status = Optional
+            							.ofNullable(System.getenv("APP_STATUS"))
+            							.filter(HealthcheckApiController::isNumeric)
+            							.map(Integer::decode)
+            							.map(HttpStatus::valueOf)
+            							.orElse(HttpStatus.OK);
             final String health = status == HttpStatus.OK ? "healthy" : "unhealthy";
             final String build = Optional.ofNullable(System.getenv("APP_VERSION")).orElse("unknown");
             final String json = String.format("{  \"message\": \"User-Java Service Healthcheck for build %s\",  \"status\": \"%s\" }", build, health );
@@ -41,4 +46,15 @@ public class HealthcheckApiController implements HealthcheckApi {
         }
     }
 
+    private static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            Integer.parseInt(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }    
 }
