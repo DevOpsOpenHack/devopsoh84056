@@ -3,10 +3,10 @@ run-name: ${{ github.actor }} is playing with docker
 on:
     workflow_dispatch:
     push:
-        branches:
-            - main
-        paths:
-            - api/user-java/**        
+#        branches:
+#            - main
+#        paths:
+#            - api/user-java/**        
 
 jobs:
     build_docker:
