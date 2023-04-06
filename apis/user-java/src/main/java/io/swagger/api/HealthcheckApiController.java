@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Optional;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-08-03T19:26:46.543Z")
 
 @Controller
@@ -29,11 +30,31 @@ public class HealthcheckApiController implements HealthcheckApi {
     public ResponseEntity<Healthcheck> healthcheckUserGet() {
 
         try {
-            return new ResponseEntity<Healthcheck>(objectMapper.readValue("{  \"message\" : \"User-Java Service Healthcheck\",  \"status\" : \"healthy\"}", Healthcheck.class), HttpStatus.OK);
+            final HttpStatus status = Optional
+            							.ofNullable(System.getenv("APP_STATUS"))
+            							.filter(HealthcheckApiController::isNumeric)
+            							.map(Integer::decode)
+            							.map(HttpStatus::valueOf)
+            							.orElse(HttpStatus.OK);
+            final String health = status == HttpStatus.OK ? "healthy" : "unhealthy";
+            final String build = Optional.ofNullable(System.getenv("APP_VERSION")).orElse("unknown");
+            final String json = String.format("{  \"message\": \"User-Java Service Healthcheck for build %s\",  \"status\": \"%s\" }", build, health );
+            return new ResponseEntity<Healthcheck>(objectMapper.readValue(json, Healthcheck.class), status);
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
             return new ResponseEntity<Healthcheck>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    private static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            Integer.parseInt(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }    
 }
