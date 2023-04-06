@@ -12,12 +12,14 @@ jobs:
     name: build_dockers
     runs-on: ubuntu-latest
     steps:
+        - uses: actions/checkout@v3
+
         - name: 'Az CLI login'
           uses: azure/login@v1
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
   
-        - name: 'Run az commands'
+        - name: 'Run az acr build and deploy'
           run: |
             az acr build -t apis/user-java:${{github.sha}} -r devopsoh84056cr .
             
