@@ -5,24 +5,43 @@ on:
     push:
 
 jobs:
-  build_docker:
-    defaults:
-      run:
-        working-directory: apis/user-java
-    name: build_dockers
-    runs-on: ubuntu-latest
-    steps:
-        - uses: actions/checkout@v3
+    build_docker:
+        defaults:
+          run:
+            working-directory: apis/user-java
+        name: build_dockers
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+    
+            - name: 'Az CLI login'
+              uses: azure/login@v1
+              with:
+                creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+            - name: 'Run az acr build and deploy to Registry'
+              run: |
+                az acr build -t devopsoh/api-user-java:${{github.sha}} -r devopsoh84056cr .
+    
+    deploy_docker_staging:
+        needs: build_docker
+        defaults:
+          run:
+            working-directory: apis/user-java
+        name: deploy_docker_staging
+        runs-on: ubuntu-latest
+        steps:
+            - name: 'Az CLI login'
+              uses: azure/login@v1
+              with:
+                creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-        - name: 'Az CLI login'
-          uses: azure/login@v1
-          with:
-            creds: ${{ secrets.AZURE_CREDENTIALS }}
-  
-        - name: 'Run az acr build and deploy'
-          run: |
-            az acr build -t apis/user-java:${{github.sha}} -r devopsoh84056cr .
+            - uses: azure/webapps-deploy@v2
+              with:
+                app-name: 'api-user-java'
+                images: 'devopsoh84056cr.azurecr.io/devopsoh/api-user-java:${{ github.sha }}'
+
+            - name: Azure logout
+              run: |
+                az logout
             
-#        - name: Terraform deployment
-#          run: terraform apply --auto-approve -var="location=${LOCATION}" -var="resources_prefix=${{ needs.init_resources_prefix.outputs.RESOURCES_PREFIX }}"
-  
