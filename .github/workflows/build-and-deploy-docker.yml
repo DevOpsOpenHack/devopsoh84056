@@ -25,7 +25,7 @@ jobs:
       
             - name: 'Run az acr build and deploy to Registry'
               run: |
-                az acr build -t devopsoh/api-user-java:${{github.sha}} -r devopsoh84056cr .
+                az acr build -t devopsoh/api-user-java:${{github.sha}} -r devopsoh84056cr . --build-arg build_version=${{github.sha}}
     
     deploy_docker_staging:
         needs: build_docker
