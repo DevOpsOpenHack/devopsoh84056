@@ -57,7 +57,7 @@ jobs:
               with:
                 url: https://devopsoh84056userjava-staging.azurewebsites.net/api/healthcheck/user-java
                 follow-redirect: false
-                max-attempts: 3
+                max-attempts: 50
                 retry-delay: 5s
                 retry-all: false
                           
