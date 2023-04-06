@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Optional;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-08-03T19:26:46.543Z")
 
 @Controller
@@ -29,7 +30,11 @@ public class HealthcheckApiController implements HealthcheckApi {
     public ResponseEntity<Healthcheck> healthcheckUserGet() {
 
         try {
-            return new ResponseEntity<Healthcheck>(objectMapper.readValue("{  \"message\" : \"User-Java Service Healthcheck\",  \"status\" : \"healthy\"}", Healthcheck.class), HttpStatus.OK);
+            final HttpStatus status = HttpStatus.SERVICE_UNAVAILABLE;
+            final String health = status == HttpStatus.OK ? "healthy" : "unhealthy";
+            final String build = Optional.ofNullable(System.getenv("APP_VERSION")).orElse("unknown");
+            final String json = String.format("{  \"message\": \"User-Java Service Healthcheck\",  \"status\": \"%s\", \"build\": \"%s\"}", health, build);
+            return new ResponseEntity<Healthcheck>(objectMapper.readValue(json, Healthcheck.class), status);
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
             return new ResponseEntity<Healthcheck>(HttpStatus.INTERNAL_SERVER_ERROR);
