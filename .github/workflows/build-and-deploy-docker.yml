@@ -2,6 +2,7 @@ name: build and deploy docker image
 run-name: ${{ github.actor }} is playing with docker
 on:
     workflow_dispatch:
+    push:
 
 jobs:
   build_docker:
