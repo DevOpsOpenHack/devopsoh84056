@@ -33,7 +33,7 @@ public class HealthcheckApiController implements HealthcheckApi {
             final HttpStatus status = HttpStatus.SERVICE_UNAVAILABLE;
             final String health = status == HttpStatus.OK ? "healthy" : "unhealthy";
             final String build = Optional.ofNullable(System.getenv("APP_VERSION")).orElse("unknown");
-            final String json = String.format("{  \"message\": \"User-Java Service Healthcheck\",  \"status\": \"%s\", \"build\": \"%s\"}", health, build);
+            final String json = String.format("{  \"message\": \"User-Java Service Healthcheck for build %s\",  \"status\": \"%s\" }", build, health );
             return new ResponseEntity<Healthcheck>(objectMapper.readValue(json, Healthcheck.class), status);
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
