@@ -1,0 +1,25 @@
+name: build and deploy docker image
+run-name: ${{ github.actor }} is playing with docker
+on:
+    workflow_dispatch:
+
+jobs:
+  build_docker:
+    defaults:
+      run:
+        working-directory: apis/user-java
+    name: build_dockers
+    runs-on: ubuntu-latest
+    steps:
+        - name: 'Az CLI login'
+          uses: azure/login@v1
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+  
+        - name: 'Run az commands'
+          run: |
+            az acr build -t apis/user-java:${{github.sha}} -r devopsoh84056cr .
+            
+#        - name: Terraform deployment
+#          run: terraform apply --auto-approve -var="location=${LOCATION}" -var="resources_prefix=${{ needs.init_resources_prefix.outputs.RESOURCES_PREFIX }}"
+  
