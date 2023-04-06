@@ -1,63 +1,80 @@
 name: build and deploy docker image
 run-name: ${{ github.actor }} is playing with docker
 on:
-    workflow_dispatch:
-    push:
+  workflow_dispatch:
+  push:
 #        branches:
 #            - main
 #        paths:
-#            - api/user-java/**        
+#            - api/user-java/**
 
 jobs:
-    build_docker:
-        defaults:
-          run:
-            working-directory: apis/user-java
-        name: build_dockers
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-    
-            - name: 'Az CLI login'
-              uses: azure/login@v1
-              with:
-                creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-            - name: 'Run az acr build and deploy to Registry'
-              run: |
-                az acr build -t devopsoh/api-user-java:${{github.sha}} -r devopsoh84056cr . --build-arg build_version=${{github.sha}}
-    
-    deploy_docker_staging:
-        needs: build_docker
-        defaults:
-          run:
-            working-directory: apis/user-java
-        name: deploy_docker_staging
-        runs-on: ubuntu-latest
-        steps:
-            - name: 'Az CLI login'
-              uses: azure/login@v1
-              with:
-                creds: ${{ secrets.AZURE_CREDENTIALS }}
+  build_docker:
+    defaults:
+      run:
+        working-directory: apis/user-java
+    name: build_dockers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-            - uses: azure/webapps-deploy@v2
-              with:
-                app-name: 'devopsoh84056userjava'
-                images: 'devopsoh84056cr.azurecr.io/devopsoh/api-user-java:${{ github.sha }}'
-                slot-name: staging
-                resource-group-name: devopsoh84056rg
+      - name: "Az CLI login"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    health-check:
-          needs: deploy_docker_staging
-          name: health-check
-          runs-on: ubuntu-latest
-          steps:          
-            - name: 'Run health check on our java-user api'
-              uses: jtalk/url-health-check-action@v3
-              with:
-                url: https://devopsoh84056userjava-staging.azurewebsites.net/api/healthcheck/user-java
-                follow-redirect: false
-                max-attempts: 50
-                retry-delay: 5s
-                retry-all: false
-                          
+      - name: "Run az acr build and deploy to Registry"
+        run: |
+          az acr build -t devopsoh/api-user-java:${{github.sha}} -r devopsoh84056cr . --build-arg build_version=${{github.sha}}
+
+  deploy_docker_staging:
+    needs: build_docker
+    defaults:
+      run:
+        working-directory: apis/user-java
+    name: deploy_docker_staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Az CLI login"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - uses: azure/webapps-deploy@v2
+        with:
+          app-name: "devopsoh84056userjava"
+          images: "devopsoh84056cr.azurecr.io/devopsoh/api-user-java:${{ github.sha }}"
+          slot-name: staging
+          resource-group-name: devopsoh84056rg
+
+  health-check:
+    needs: deploy_docker_staging
+    name: health-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Run health check on our java-user api"
+        uses: jtalk/url-health-check-action@v3
+        with:
+          url: https://devopsoh84056userjava-staging.azurewebsites.net/api/healthcheck/user-java
+          follow-redirect: false
+          max-attempts: 50
+          retry-delay: 5s
+          retry-all: false
+
+  deploy_docker_production:
+    needs: health-check
+    defaults:
+      run:
+        working-directory: apis/user-java
+    name: deploy_docker_production
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Az CLI login"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: "Copy staging to prod"
+        run: |
+          az webapp deployment slot swap  -g devopsoh84056rg -n devopsoh84056userjava --slot staging \
+          --target-slot production
