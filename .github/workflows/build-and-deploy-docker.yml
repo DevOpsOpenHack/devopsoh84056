@@ -38,8 +38,10 @@ jobs:
 
             - uses: azure/webapps-deploy@v2
               with:
-                app-name: 'api-user-java'
+                app-name: 'devopsoh84056userjava'
                 images: 'devopsoh84056cr.azurecr.io/devopsoh/api-user-java:${{ github.sha }}'
+                slot-name: staging
+                resource-group-name: devopsoh84056rg
 
             - name: Azure logout
               run: |
