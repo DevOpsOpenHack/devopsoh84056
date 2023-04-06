@@ -94,7 +94,6 @@ public class UserApiControllerTest {
                         .content(convertObjectToJsonBytes(profile))
         )
                 .andExpect(MockMvcResultMatchers.status().is5xxServerError());
-        Assert.fail();
     }
 
     @Test

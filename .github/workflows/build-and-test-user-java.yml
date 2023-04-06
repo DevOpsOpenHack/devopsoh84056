@@ -3,11 +3,8 @@ run-name: ${{ github.actor }} is building and testing usr-java
 on:
   workflow_dispatch:
   pull_request:
-  push:
-    branches:
-      - 15-challenge-4-build-test
-    #paths:
-      #- apis/user-java/**
+    paths:
+      - apis/user-java/**
 
 env:
   JAVA_WORKING_DIRECTORY: apis/user-java
